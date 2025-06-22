@@ -16,7 +16,7 @@ pipeline {
                 sh 'mvn compile'
             }
         }
-
+        
         stage('test') {
            steps {
                 echo 'Running unit tests...'
