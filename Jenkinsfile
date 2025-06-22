@@ -22,6 +22,13 @@ pipeline {
                  sh 'mvn clean install'
             }
         }
+        
+       stage('deploy') {
+            steps {
+                 echo 'Deploying to production server...'
+                 sh 'echo Deploying WAR file...'
+            }
+        }
 
         
     }
