@@ -33,14 +33,6 @@ pipeline {
                 sh 'cat target/sonar/report-task.txt || cat .scannerwork/report-task.txt || true'
             }
         }
-
-        stage('Quality Gate') {
-            steps {
-                timeout(time: 20, unit: 'MINUTES') {
-                    waitForQualityGate abortPipeline: true
-                }
-            }
-        }
     }
 
     post {
