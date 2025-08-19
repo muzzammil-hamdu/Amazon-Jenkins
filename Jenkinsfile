@@ -10,24 +10,39 @@ pipeline {
                 git branch: 'main', url: 'https://github.com/PraveenKuber/Amazon-Jenkins.git'
             }
         }
+
         stage('compile') {
             steps {
                 sh 'mvn compile'
             }
         }
+
         stage('build') {
             steps {
                 sh 'mvn clean install'
             }
         }
+
         stage('SonarQube Analysis') {
             steps {
                 withSonarQubeEnv('LocalSonarQube') {
                     sh 'mvn sonar:sonar'
                 }
+                // Debug: show task ID and project details
+                sh 'echo "===== Sonar Scanner Report-Task.txt ====="'
+                sh 'cat target/sonar/report-task.txt || cat .scannerwork/report-task.txt || true'
             }
         }
-      
+
+        stage('Quality Gate') {
+            steps {
+                timeout(time: 20, unit: 'MINUTES') {
+                    waitForQualityGate abortPipeline: true
+                }
+            }
+        }
+    }
+
     post {
         success {
             echo 'Build success'
@@ -36,5 +51,4 @@ pipeline {
             echo 'Failure in the build'
         }
     }
-  }
 }
